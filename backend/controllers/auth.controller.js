@@ -7,6 +7,11 @@ export const signup = async (req, res) => {
     try{
      const { name, username, email, password } = req.body;
      const exisitingEmail = await User.findOne({ email });
+
+      if(!name || !username || !email || !password){
+            return res.status(400).json({message: "All fields are required"});
+        }
+      
       if(exisitingEmail){
             return res.status(400).json({message: "User already exists with this email"});
         }
@@ -25,10 +30,11 @@ export const signup = async (req, res) => {
         await user.save();
         
 
-        const token = jwt.sign({ email: user.email, id: user._id }, process.env.JWT_SECRET, { expiresIn: "3d" });
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "3d " });
         res.cookie("jwt-linkedin", token,
-             { httpOnly: true,
-               maxage: 3 * 24 * 60 * 60 * 1000,
+             { 
+               httpOnly: true,
+               maxAge: 3 * 24 * 60 * 60 * 1000,
                sameSite: "strict",
                secure: process.env.NODE_ENV === "production"
              },
