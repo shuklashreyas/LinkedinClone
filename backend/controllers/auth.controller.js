@@ -1,4 +1,5 @@
 import User from '../models/user.model.js';
+import { sendWelcomeEmail } from '../emails/emailHandlers.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -30,7 +31,7 @@ export const signup = async (req, res) => {
         await user.save();
         
 
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "3d " });
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "3d" });
         res.cookie("jwt-linkedin", token,
              { 
                httpOnly: true,
