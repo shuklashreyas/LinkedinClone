@@ -1,4 +1,4 @@
-import {cloudinary} from "../lib/cloudinary.js";
+import cloudinary from "../lib/cloudinary.js";
 import Post from "../models/post.model.js";
 import Notification from "../models/notification.model.js";
 import { sendCommentNotificationEmail } from "../emails/emailHandlers.js";
@@ -124,3 +124,36 @@ export const createComment = async (req, res) => {
         res.status(500).json({message: "Internal server error"});
     }
 }
+
+export const likePost = async (req, res) => {
+    try {
+        const postId = req.params.id;
+        const post = await Post.findById(postId);
+        const userId = req.user._id; 
+
+        if(post.likes.includes(userId)) {
+            post.likes = post.likes.filter(id => id.toString() !== userId);
+        }
+        else {
+            post.likes.push(userId);
+            if(post.author.toString() !== userId) {
+                const notification = new Notification({
+                    recipient: post.author,
+                    type: "like",
+                    relatedUser: userId,
+                    relatedPost: postId
+                });
+
+                await notification.save();
+            }
+        }
+
+        await post.save();
+
+        res.status(200).json(post);
+    }
+    catch (error) {
+        console.error("Error liking post", error.message);
+        res.status(500).json({message: "Internal server error"});
+    }
+}   
