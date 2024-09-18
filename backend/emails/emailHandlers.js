@@ -61,3 +61,4 @@ export const sendConnectionAcceptedEmail = async (senderEmail, senderName, recip
 		});
 	} catch (error) {}
 };
+
