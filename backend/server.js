@@ -12,7 +12,7 @@ import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
-const app = express();
+const app = express({limit: "5mb"});
 const PORT = process.env.PORT || 5001;
 
 app.use(express.json()); //parse json request bodies
