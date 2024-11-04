@@ -1,10 +1,11 @@
 import React from 'react'
+import Navbar from './Navbar'
 
-const Layout = () => {
-  return (
-    <div className='min-h-screen bg-base-100'>
-        <Navbar />
-  )
-}
+const Layout = ({children}) => {
+  return <div className='min-h-screen bg-base-100'>
+   <Navbar />
+   <main className = 'max-w-7xl mx-auto px-4 py-6x'>{children}</main>
+  </div>;
+};
 
-export default Layout
+export default Layout;
